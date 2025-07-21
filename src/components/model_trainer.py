@@ -3,13 +3,11 @@ import sys
 from dataclasses import dataclass
 
 from catboost import CatBoostRegressor
-
 from sklearn.ensemble import (
     AdaBoostRegressor,
     GradientBoostingRegressor,
     RandomForestRegressor,
 )
-
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
@@ -19,9 +17,6 @@ from xgboost import XGBRegressor
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object, evaluate_models
-
-
-
 
 @dataclass
 class ModelTrainerConfig:
@@ -53,19 +48,31 @@ class ModelTrainer:
                 "AdaBoost Regressor": AdaBoostRegressor(),
             }
 
-            model_report: dict =   evaluate_models(
-                X=X_train,
-                y=y_train,
+            # FIXED: Wrap all parameter values in lists
+            params = {
+                "Random Forest": {"n_estimators": [100], "max_depth": [10]},
+                "Decision Tree": {"max_depth": [10]},
+                "Gradient Boosting": {"n_estimators": [100], "learning_rate": [0.1]},
+                "Linear Regression": {},
+                "K-Neighbors Regressor": {"n_neighbors": [5]},
+                "XGBRegressor": {"n_estimators": [100], "learning_rate": [0.1]},
+                "CatBoosting Regressor": {"iterations": [100], "learning_rate": [0.1]},
+                "AdaBoost Regressor": {"n_estimators": [50], "learning_rate": [1.0]},
+            }
+
+            model_report: dict = evaluate_models(
+                X_train=X_train,
+                y_train=y_train,
                 X_test=X_test,
                 y_test=y_test,
                 models=models,
+                param=params,  # Now correctly formatted
             )
 
-            ## to get best model score from the model report
-
+            # Get best model score from the model report
             best_model_score = max(sorted(model_report.values()))
 
-            ## to get best model name from the model report
+            # Get best model name from the model report
             best_model_name = list(model_report.keys())[
                 list(model_report.values()).index(best_model_score)
             ]
@@ -88,8 +95,6 @@ class ModelTrainer:
             r2_square = r2_score(y_test, predicted)
 
             return r2_square
-
-
 
         except Exception as e:
             raise CustomException(e, sys)
