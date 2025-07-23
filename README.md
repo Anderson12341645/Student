@@ -2,8 +2,8 @@
 
 ## Run from terminal:
 
-docker build -t Testdockerstudent.azurecr.io/mltest:latest
+docker build -t testdockerstudent.azurecr.io/studentenv:Test
 
 docker login Testdockerstudent.azurecr.io
 
-docker push Testdockerstudent.azurecr.io/mltest:latest
+docker push testdockerstudent.azurecr.io/studentenv:Test
