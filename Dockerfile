@@ -8,15 +8,19 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first for caching
+# 1️⃣ First, copy ONLY dependency files
 COPY requirements.txt .
+COPY setup.py .          # ⬅️ Add this (or pyproject.toml if you use it)
+COPY pyproject.toml .    # ⬅️ Include if applicable
+
+# 2️⃣ Install dependencies (now has context for local package)
 RUN pip install -r requirements.txt
 
-# Copy application
+# 3️⃣ Now copy the rest of the application
 COPY . .
 
 # Use port 80 for Azure
 EXPOSE 80
 
-# Start Gunicorn (ensure it's installed in requirements.txt)
+# Start Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:80", "--workers", "4", "app:app"]
