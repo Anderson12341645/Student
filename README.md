@@ -6,4 +6,4 @@ docker build -t testdockerstu.azurecr.io/student:latest
 
 docker login testdockerstu.azurecr.io
 
-docker push testdockerstu.azurecr.io/studentenv:latest
+docker push testdockerstu.azurecr.io/student:latest
