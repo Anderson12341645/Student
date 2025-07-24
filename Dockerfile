@@ -1,22 +1,15 @@
 FROM python:3.11-slim
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc build-essential && \
-    rm -rf /var/lib/apt/lists/*
-
 # Set working directory
 WORKDIR /app
 
-# 1️⃣ First, copy ONLY dependency files
+# 1. Copy ONLY requirements first
 COPY requirements.txt .
-COPY setup.py .          # ⬅️ Add this (or pyproject.toml if you use it)
-COPY pyproject.toml .    # ⬅️ Include if applicable
 
-# 2️⃣ Install dependencies (now has context for local package)
-RUN pip install -r requirements.txt
+# 2. Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 3️⃣ Now copy the rest of the application
+# 3. Copy the entire application
 COPY . .
 
 # Use port 80 for Azure
