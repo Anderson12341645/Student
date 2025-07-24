@@ -19,4 +19,4 @@ ENV PORT=80
 EXPOSE 80
 
 # Start Gunicorn server
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "--workers", "4", "app:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 app:app || gunicorn --bind 0.0.0.0:80 --workers 4 app:app
