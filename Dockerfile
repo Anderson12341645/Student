@@ -1,11 +1,13 @@
 FROM python:3.11-slim
 
-
-# Set working directory
 WORKDIR /app
 
+# Copy only requirements first for caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 1. Copy ONLY requirements first
-COPY . /app/
-RUN pip install -r requirements.txt
-CMD [ "python", "app.py" ]
+# Copy the rest of your app
+COPY . .
+
+# Use dynamic port binding
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 app:app
