@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # 3. Copy the entire application
-COPY . .
+Copy app.py .
 
 # Use port 80 for Azure
 EXPOSE 80
