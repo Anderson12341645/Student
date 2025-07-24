@@ -4,16 +4,6 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 1. Copy ONLY requirements first
-COPY requirements.txt .
-
-# 2. Install dependencies
+COPY . /app/
 RUN pip install -r requirements.txt
-
-# 3. Copy the entire application
-Copy app.py .
-
-# Use port 80 for Azure
-EXPOSE 80
-
-# Start Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "--workers", "4", "app:app"]
+CMD [ "python3", "app.py" ]
