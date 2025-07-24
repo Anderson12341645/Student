@@ -1,22 +1,17 @@
-
-# Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
 COPY . /app/
-# Install system dependencies
-RUN apt-get update && apt-get install -y gcc
 
 # Copy requirements first for caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy application
 COPY . .
 
-# Set environment variables
-ENV PORT=80
+# Use fixed port 80
 EXPOSE 80
 
-# Start Gunicorn server
+# Start Gunicorn with fixed port
 CMD ["gunicorn", "--bind", "0.0.0.0:80", "--workers", "4", "app:app"]
